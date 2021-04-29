@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Good Thought</string>
+    <string name="title">Good Thought</string>
+    <string name="text">Here to learn</string>
+    <string name="text2">Welcome</string>
+    <string name="Quotes">Quotesv</string>
+    <string name="Drawer_open">Open</string>
+    <string name="Drawer_close">Close</string>
+    <string name="duration">Duration :</string>
+    <string name="published">Published :</string>
+    <string name="Topic">Topic :</string>
+    <string name="listenedby">Listned by :</string>
+    <string name="likedby">Liked by :</string>
+    <string name="myAccountUserName">Name :  " "</string>
+    <string name="myAccountUserEmailAddress">Email address : " "</string>
+</resources>

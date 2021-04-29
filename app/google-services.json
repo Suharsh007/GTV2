@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "172912963661",
+    "project_id": "good-thought-c448b",
+    "storage_bucket": "good-thought-c448b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:172912963661:android:f98a4e974783a88dcb6c04",
+        "android_client_info": {
+          "package_name": "in.goodthought.GoodThought"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "172912963661-f3n8ibacfhikasi3pmc806la4ucme5c0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.goodthought.GoodThought",
+            "certificate_hash": "9f567ef79a4fef986735046e2f468d0321ef70fc"
+          }
+        },
+        {
+          "client_id": "172912963661-kj2nusvrjr14gej132rsk6ao9bh9uil3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDopboTKcSZshuKpcD16Tjzs6DG3cFw6y4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "172912963661-kj2nusvrjr14gej132rsk6ao9bh9uil3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

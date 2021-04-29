@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/background"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    android:scrollbars="none"
+    tools:context=".podcastPlayer">
+
+    <LinearLayout
+        android:id="@+id/layout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/podcastImage"
+            android:layout_width="match_parent"
+            android:layout_height="404dp"
+            android:padding="10dp" />
+
+
+        <SeekBar
+            android:id="@+id/seekBarID"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_gravity="center_horizontal"
+            android:padding="5dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+            android:text="* Listen at safe sound level *"
+            android:textAlignment="center"
+            android:textSize="16sp"/>
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_btn"
+            android:padding="5dp"
+            android:text="Start"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+
+        <TextView
+            android:id="@+id/timeleft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="00:00"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:onClick="setLikeButton"
+            android:background="@drawable/round_btn"
+            android:text="Like"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            />
+
+
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Problem has occurred due to loss of internet connectivity. You may restart the media player."
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/tryagain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_btn"
+            android:text="Restart"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:visibility="gone"
+            />
+
+
+
+
+        <TextView
+            android:id="@+id/inPlayerDuration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:background="@drawable/textview_background"
+            android:text="Duration"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/inPlayerPublishDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:layout_below="@+id/inPlayerDuration"
+            android:background="@drawable/textview_background"
+            android:layout_gravity="start"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:text="Published"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/podcastTopic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:background="@drawable/textview_background"
+            android:layout_below="@+id/inPlayerPublishDate"
+            android:layout_gravity="start"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:text="Topic"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/podcastListnedBy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textview_background"
+            android:layout_below="@+id/podcastTopic"
+            android:layout_gravity="start"
+            android:textColor="@color/black"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:text="Listened by"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/podcastLikedBy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textview_background"
+            android:layout_below="@+id/podcastListnedBy"
+            android:textColor="@color/black"
+            android:layout_gravity="start"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:text="Liked by"
+            android:textSize="16sp" />
+
+
+
+    </LinearLayout>
+
+
+</ScrollView>

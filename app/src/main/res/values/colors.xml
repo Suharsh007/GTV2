@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#C36C63</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#C36C63</color>
+    <color name="colorPages">#BFEAF1</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorName">#C36C63</color>
+    <color name="btnColor">#C36C63</color>
+    <color name="likeColor">#156bea</color>
+    <color name="black" >#000000</color>
+    <color name = "background" >#BFEAF1</color>
+
+</resources>
