@@ -52,7 +52,7 @@ public class contact_activity extends AppCompatActivity {
         mail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent (Intent.ACTION_VIEW , Uri.parse("mailto:" + "contact@decib.in"));
+                Intent intent = new Intent (Intent.ACTION_VIEW , Uri.parse("mailto:" + "suharshmahajan07@gmail.com"));
                 intent.putExtra(Intent.EXTRA_SUBJECT, "your_subject");
                 intent.putExtra(Intent.EXTRA_TEXT, "your_text");
                 startActivity(intent);
