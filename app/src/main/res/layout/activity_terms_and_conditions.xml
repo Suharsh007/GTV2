@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/colorWhite"
+    android:layout_height="match_parent"
+    tools:context=".terms_and_conditions">
+    <TextView
+        android:id="@+id/tV1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Terms and Conditions"
+        android:layout_marginTop="10dp"
+        android:textSize="26sp"
+        android:textColor="@color/black"
+        android:gravity="center_horizontal"/>
+    <WebView
+        android:id="@+id/tnc_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tV1"
+        />
+</RelativeLayout>
