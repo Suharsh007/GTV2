@@ -165,19 +165,22 @@ public class podcast_Activity extends AppCompatActivity implements recyclerv.onI
                         podcast_Activity.this.finish();
                         break;
                     case R.id.tnc:
-                        Intent openURL = new Intent(android.content.Intent.ACTION_VIEW);
+                      /*  Intent openURL = new Intent(android.content.Intent.ACTION_VIEW);
                         openURL.setData(Uri.parse("https://decib.in/terms-and-conditions/"));
                         startActivity(openURL);
-                        hasRestarted=true;
+                        hasRestarted=true;*/
+                        startActivity(new Intent(podcast_Activity.this,terms_and_conditions.class));
                         break;
                     case R.id.privacyPolicy:
-                        Intent intent = new Intent();
+                      /*  Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
                         intent.addCategory(Intent.CATEGORY_BROWSABLE);
                         intent.setData(Uri.parse("https://decib.in/privacy-policy/"));
                         startActivity(intent);
-                        hasRestarted=true;
+                        hasRestarted=true;*/
+                        startActivity(new Intent(podcast_Activity.this,privacy_policy.class));
                         break;
+
                 }
                 return false;
             }
