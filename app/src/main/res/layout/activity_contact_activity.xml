@@ -76,7 +76,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true">
         <Button
-            android:id="@+id/signout_button"
+            android:id="@+id/signout_button_CA"
             android:layout_width="match_parent"
             android:background="@drawable/round_btn"
             android:textSize="18sp"

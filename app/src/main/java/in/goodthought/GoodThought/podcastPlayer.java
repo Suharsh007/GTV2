@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ public class podcastPlayer extends AppCompatActivity implements Runnable {
     public static MediaPlayer mediaPlayer;
     public static Button button,likeButton;
     private Button restartPlayer;
+    private ImageButton markButton;
     private static SeekBar seekBar;
     private ArrayList<PodcastModel> list;
     private ImageView image;
@@ -73,6 +75,9 @@ public class podcastPlayer extends AppCompatActivity implements Runnable {
     private static int LikedByCount;
     private ConnectivityManager cm;
     private ConnectivityManager.NetworkCallback networkCallback;
+    private boolean markcheck = false;
+
+
 
 
     @Override
@@ -100,6 +105,7 @@ public class podcastPlayer extends AppCompatActivity implements Runnable {
         timeLeft=findViewById(R.id.timeleft);
         likeButton=findViewById(R.id.like);
         likedBy=findViewById(R.id.podcastLikedBy);
+        markButton=findViewById(R.id.markButton);
 
 
         final Bundle bundle = getIntent().getExtras();
@@ -208,9 +214,20 @@ public class podcastPlayer extends AppCompatActivity implements Runnable {
 
 
         if (bundle != null) {
-            index=bundle.getInt("index");
+            if(bundle.get("ML")!=null){
+                if(bundle.get("ML").equals("ML")){
+                    index=bundle.getInt("indexML");
+                    list=MarkedList.getMLList();
+                }else {
+                    index = bundle.getInt("index");
 
-            list = podcast_Activity.getPodcastList();
+                    list = podcast_Activity.getPodcastList();
+                }
+            }else {
+                index = bundle.getInt("index");
+
+                list = podcast_Activity.getPodcastList();
+            }
             if(index<=(list.size()-1)){
 
                 duration.setText(getString(R.string.duration) + list.get(index).getDuration());
@@ -218,6 +235,7 @@ public class podcastPlayer extends AppCompatActivity implements Runnable {
                 topic.setText(getString(R.string.Topic)+list.get(index).getTopic());
                 getListenedBy();
                 getLikedBy();
+                checkMarked(list,index);
                 Picasso.get().load(list.get(index).getImageUrl()).placeholder(R.drawable.icon).into(image);
 
 
@@ -246,7 +264,7 @@ public class podcastPlayer extends AppCompatActivity implements Runnable {
 
 
         try {
-            mediaPlayer.setDataSource(list.get(index).getAudioUrl());
+           mediaPlayer.setDataSource(list.get(index).getAudioUrl());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -749,8 +767,157 @@ public class podcastPlayer extends AppCompatActivity implements Runnable {
 
     }
 
+public void checkMarked(ArrayList<PodcastModel> list, int index){
+    final boolean[] check = {false};
+
+
+    final ArrayList<QueryDocumentSnapshot> d=new ArrayList<>();
 
 
 
+
+    db.collection("UserDetails").whereEqualTo("personUid",user.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        @Override
+        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+            if (error==null){
+                if (value!=null){
+                    if (!value.isEmpty()) {
+                        for (QueryDocumentSnapshot documentSnapshot:value) {
+
+
+                            d.add(documentSnapshot);
+
+                            break;
+                        }
+                        if (!check[0]){
+
+
+
+                            db.collection("UserDetails").document(d.get(0).getId()).collection("MarkedList").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    check[0]=true;
+
+                                    for(QueryDocumentSnapshot queryDocumentSnapshot:queryDocumentSnapshots){
+                                        if(queryDocumentSnapshot.getId().equals("AYQ6Jm4n7hEHPIYKsDHJ")){
+                                            markcheck = true;
+                                            markButton.setImageResource(R.drawable.star_on);
+                                        }
+                                    }
+
+                                    d.clear();
+                                }
+                            });
+
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+    public void setMarkButton(View view) {
+
+            final Map<String,Object> ud=new HashMap<>();
+            final boolean[] check = {false};
+
+
+            final ArrayList<QueryDocumentSnapshot> d=new ArrayList<>();
+
+            if (markcheck){
+                Toast.makeText(this, "Unmarked", Toast.LENGTH_SHORT).show();
+
+                db.collection("UserDetails").whereEqualTo("personUid",user.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                        if (error==null){
+                            if (value!=null){
+                                if (!value.isEmpty()) {
+                                    for (QueryDocumentSnapshot documentSnapshot:value) {
+
+                                        d.add(documentSnapshot);
+
+                                        break;
+                                    }
+                                    if (!check[0]){
+
+
+
+
+                                        db.collection("UserDetails").document(d.get(0).getId()).collection("MarkedList").document("AYQ6Jm4n7hEHPIYKsDHJ").delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @SuppressLint("ResourceAsColor")
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                markcheck=false;
+                                                check[0] =true;
+
+                                                markButton.setImageResource(R.drawable.staroff);
+
+                                                d.clear();
+
+
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(podcastPlayer.this, "Failed "+e.toString(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });}
+                                }
+                            }
+                        }
+                    }
+                });
+            }else{
+
+                Toast.makeText(this, "Marked", Toast.LENGTH_SHORT).show();
+                db.collection("UserDetails").whereEqualTo("personUid",user.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                        if (error==null){
+                            if (value!=null){
+                                if (!value.isEmpty()) {
+                                    for (QueryDocumentSnapshot documentSnapshot:value) {
+
+
+                                        d.add(documentSnapshot);
+
+                                        break;
+                                    }
+                                    if (!check[0]){
+
+
+                                        ud.put("i",true);
+                                        db.collection("UserDetails").document(d.get(0).getId()).collection("MarkedList").document("AYQ6Jm4n7hEHPIYKsDHJ").set(ud).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @SuppressLint("ResourceAsColor")
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+
+                                                markcheck=true;
+                                                check[0] =true;
+
+                                                markButton.setImageResource(R.drawable.star_on);
+
+                                                d.clear();
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(podcastPlayer.this, "Failed "+e.toString(), Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        });}
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+        }
 
 }

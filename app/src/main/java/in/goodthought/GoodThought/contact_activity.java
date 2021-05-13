@@ -43,7 +43,7 @@ public class contact_activity extends AppCompatActivity {
         mail = findViewById(R.id.tvMail1);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        signout = findViewById(R.id.signout_button);
+        signout = findViewById(R.id.signout_button_CA);
         drawerLayout = findViewById(R.id.drawerLayout_CA);
         toggle = new ActionBarDrawerToggle(contact_activity.this, drawerLayout, R.string.Drawer_open, R.string.Drawer_close);
         toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.black));
@@ -66,7 +66,8 @@ public class contact_activity extends AppCompatActivity {
 
 
                 switch (item.getItemId()){
-                    case R.id.myAccount_id: startActivity(new Intent(contact_activity.this, myAccount.class));
+                    case R.id.myAccount_id:
+                        startActivity(new Intent(contact_activity.this, myAccount.class));
                         contact_activity.this.finish();
                         break;
                     case R.id.contactUs: startActivity(new Intent(contact_activity.this, contact_activity.class));
@@ -76,16 +77,15 @@ public class contact_activity extends AppCompatActivity {
                         contact_activity.this.finish();
                         break;
                     case R.id.tnc:
-                        Intent openURL = new Intent(android.content.Intent.ACTION_VIEW);
-                        openURL.setData(Uri.parse("https://decib.in/terms-and-conditions/"));
-                        startActivity(openURL);
+                        startActivity(new Intent( contact_activity.this,terms_and_conditions.class));
                         break;
                     case R.id.privacyPolicy:
-                        Intent intent = new Intent();
-                        intent.setAction(Intent.ACTION_VIEW);
-                        intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                        intent.setData(Uri.parse("https://decib.in/privacy-policy/"));
-                        startActivity(intent);
+                        startActivity(new Intent(contact_activity.this,privacy_policy.class));
+                        break;
+
+                    case R.id.markedList:
+                        startActivity(new Intent(contact_activity.this, MarkedList.class));
+                        contact_activity.this.finish();
                         break;
                 }
                 return false;
