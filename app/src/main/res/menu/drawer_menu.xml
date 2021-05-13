@@ -15,6 +15,10 @@
             android:id="@+id/podcasts"
             android:title="Podcasts"
             android:icon="@drawable/podcast"/>
+        <item
+            android:id="@+id/markedList"
+            android:title="Marked List"
+            android:icon="@android:drawable/star_big_on"/>
     </group>
 
     <group>

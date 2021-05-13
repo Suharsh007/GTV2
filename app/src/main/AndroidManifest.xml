@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".privacy_policy"></activity>
+        <activity android:name=".MarkedList"></activity>
+        <activity android:name=".privacy_policy" />
         <activity android:name=".terms_and_conditions" />
         <activity android:name=".contact_activity" />
         <activity android:name=".myAccount" />
