@@ -19,6 +19,11 @@
             android:id="@+id/markedList"
             android:title="Marked List"
             android:icon="@android:drawable/star_big_on"/>
+        <item
+            android:id="@+id/share"
+            android:title="Share"
+            android:icon="@drawable/ic_baseline_share_24"/>
+
     </group>
 
     <group>

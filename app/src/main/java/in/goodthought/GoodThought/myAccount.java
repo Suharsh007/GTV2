@@ -85,6 +85,16 @@ public class myAccount extends AppCompatActivity {
                         startActivity(new Intent(myAccount.this, MarkedList.class));
                         myAccount.this.finish();
                         break;
+                    case R.id.share:
+                        Intent share = new Intent(android.content.Intent.ACTION_SEND);
+                        share.setType("text/plain");
+                        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                        share.putExtra(Intent.EXTRA_SUBJECT, "Title Of The Post");
+                        share.putExtra(Intent.EXTRA_TEXT, "I am enjoying the podcasts on Good Thought." +
+                                " You should try it  "
+                                +"https://play.google.com/store/apps/details?id=in.goodthought.GoodThought");
+
+                        startActivity(Intent.createChooser(share, "Share link!"));
                 }
                 return false;
             }
