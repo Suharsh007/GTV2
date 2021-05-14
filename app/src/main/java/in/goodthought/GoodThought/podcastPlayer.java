@@ -76,6 +76,7 @@ public class podcastPlayer extends AppCompatActivity implements Runnable {
     private ConnectivityManager cm;
     private ConnectivityManager.NetworkCallback networkCallback;
     private boolean markcheck = false;
+    private String id;
 
 
 
@@ -237,6 +238,7 @@ public class podcastPlayer extends AppCompatActivity implements Runnable {
                 getLikedBy();
                 checkMarked(list,index);
                 Picasso.get().load(list.get(index).getImageUrl()).placeholder(R.drawable.icon).into(image);
+                getId();
 
 
 
@@ -798,13 +800,13 @@ public void checkMarked(ArrayList<PodcastModel> list, int index){
                                 @Override
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                     check[0]=true;
-
+                                    if(id!=null){
                                     for(QueryDocumentSnapshot queryDocumentSnapshot:queryDocumentSnapshots){
-                                        if(queryDocumentSnapshot.getId().equals("AYQ6Jm4n7hEHPIYKsDHJ")){
+                                        if(queryDocumentSnapshot.getId().equals(id)){
                                             markcheck = true;
                                             markButton.setImageResource(R.drawable.star_on);
                                         }
-                                    }
+                                    }}
 
                                     d.clear();
                                 }
@@ -845,9 +847,8 @@ public void checkMarked(ArrayList<PodcastModel> list, int index){
                                     if (!check[0]){
 
 
-
-
-                                        db.collection("UserDetails").document(d.get(0).getId()).collection("MarkedList").document("AYQ6Jm4n7hEHPIYKsDHJ").delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        if(id!=null){
+                                        db.collection("UserDetails").document(d.get(0).getId()).collection("MarkedList").document(id).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @SuppressLint("ResourceAsColor")
                                             @Override
                                             public void onSuccess(Void aVoid) {
@@ -865,7 +866,11 @@ public void checkMarked(ArrayList<PodcastModel> list, int index){
                                             public void onFailure(@NonNull Exception e) {
                                                 Toast.makeText(podcastPlayer.this, "Failed "+e.toString(), Toast.LENGTH_SHORT).show();
                                             }
-                                        });}
+                                        });
+                                        }else {
+                                            Toast.makeText(podcastPlayer.this, "Failed to unmark", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -889,10 +894,9 @@ public void checkMarked(ArrayList<PodcastModel> list, int index){
                                         break;
                                     }
                                     if (!check[0]){
-
-
+                                        if(id!=null){
                                         ud.put("i",true);
-                                        db.collection("UserDetails").document(d.get(0).getId()).collection("MarkedList").document("AYQ6Jm4n7hEHPIYKsDHJ").set(ud).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        db.collection("UserDetails").document(d.get(0).getId()).collection("MarkedList").document(id).set(ud).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @SuppressLint("ResourceAsColor")
                                             @Override
                                             public void onSuccess(Void aVoid) {
@@ -910,13 +914,40 @@ public void checkMarked(ArrayList<PodcastModel> list, int index){
                                                 Toast.makeText(podcastPlayer.this, "Failed "+e.toString(), Toast.LENGTH_SHORT).show();
 
                                             }
-                                        });}
+                                        });}else {
+                                            Toast.makeText(podcastPlayer.this, "Failed to mark", Toast.LENGTH_SHORT).show();
+                                        }
+                                        }
                                 }
                             }
                         }
                     }
                 });
             }
+
+        }
+
+        public void getId(){
+
+            db.collection("podcast").whereEqualTo("audioUrl",list.get(index).getAudioUrl()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                    if (error==null){
+                        if (value!=null){
+                            if (!value.isEmpty()) {
+                                for (QueryDocumentSnapshot documentSnapshot:value) {
+                                    id =documentSnapshot.getId();
+
+
+                                    break;
+                                }
+
+                            }
+                        }
+                    }
+                }
+            });
 
         }
 

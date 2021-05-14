@@ -12,13 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MarkedList"></activity>
+
+        <activity android:name=".MarkedList"/>
         <activity android:name=".privacy_policy" />
         <activity android:name=".terms_and_conditions" />
         <activity android:name=".contact_activity" />
         <activity android:name=".myAccount" />
         <activity android:name=".podcastPlayer" />
-        <activity android:name=".podcast_Activity" />
+        <activity android:name=".podcast_Activity"></activity>
         <activity android:name=".SignIn_Activity" />
         <activity android:name=".MainActivity">
             <intent-filter>

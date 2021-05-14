@@ -10,6 +10,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -18,12 +19,17 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,6 +81,9 @@ public class podcast_Activity extends AppCompatActivity implements recyclerv.onI
     private Source source = Source.SERVER;
     private TextView itext;
     private boolean hasRestarted=false;
+
+    private EditText search;
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -147,6 +156,25 @@ public class podcast_Activity extends AppCompatActivity implements recyclerv.onI
         itext = findViewById(R.id.iu);
         tryAgain =findViewById(R.id.tryAgainButton);
 
+        search=findViewById(R.id.search_2);
+
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+              startSearch(charSequence.toString().toLowerCase());
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
 
 
@@ -220,6 +248,19 @@ public class podcast_Activity extends AppCompatActivity implements recyclerv.onI
 
     }
 
+    private void startSearch(String searchText) {
+        ArrayList<PodcastModel> searchList = new ArrayList<>();
+        if(podcastList!=null){
+            if(!podcastList.isEmpty()){
+                for(PodcastModel podcast:podcastList){
+                    if(podcast.getSpeakerName().toLowerCase().contains(searchText) || podcast.getAboutTopic().toLowerCase().contains(searchText) || podcast.getTopic().toLowerCase().contains(searchText) || podcast.getDate().toLowerCase().contains(searchText)){
+                         searchList.add(podcast);
+                    }
+                }
+                setAdapter(searchList);
+            }
+        }
+    }
 
 
     @Override
@@ -357,4 +398,6 @@ public class podcast_Activity extends AppCompatActivity implements recyclerv.onI
         hasRestarted=false;
 
     }
+
+
 }
