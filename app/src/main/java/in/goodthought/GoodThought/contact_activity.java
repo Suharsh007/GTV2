@@ -125,5 +125,12 @@ public class contact_activity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(contact_activity.this,podcast_Activity.class);
+        startActivity(i);
+        this.finish();
+    }
 
 }

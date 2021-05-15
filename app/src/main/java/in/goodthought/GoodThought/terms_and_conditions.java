@@ -31,4 +31,5 @@ public class terms_and_conditions extends AppCompatActivity {
 
 
     }
+
 }
