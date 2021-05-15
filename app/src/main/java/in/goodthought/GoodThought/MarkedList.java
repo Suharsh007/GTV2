@@ -59,6 +59,7 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
     private recyclerv adapter;
     private RecyclerView recyclerView;
     private static ArrayList<PodcastModel> podcastList = new ArrayList<>();
+    private static ArrayList<PodcastModel> searchList = new ArrayList<>();
     private ActionBarDrawerToggle toggle;
     private DrawerLayout drawerLayout;
 
@@ -216,9 +217,9 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
                         Intent share = new Intent(android.content.Intent.ACTION_SEND);
                         share.setType("text/plain");
                         share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                        share.putExtra(Intent.EXTRA_SUBJECT, "Title Of The Post");
-                        share.putExtra(Intent.EXTRA_TEXT, "I am enjoying the podcasts on Good Thought." +
-                                " You should try it  "
+                        share.putExtra(Intent.EXTRA_SUBJECT, "Good Thought");
+                        share.putExtra(Intent.EXTRA_TEXT, "Good Thought is a platform through which people, may be from various field, share their journey, experiences and good learnings they had." +
+                                "\nYou may also try this platform. \nThis is the link to platform :- "
                                 +"https://play.google.com/store/apps/details?id=in.goodthought.GoodThought");
 
                         startActivity(Intent.createChooser(share, "Share link!"));
@@ -244,7 +245,8 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
     }
 
     private void startSearch(String searchText) {
-        ArrayList<PodcastModel> searchList = new ArrayList<>();
+        searchList.clear();
+
         if(podcastList!=null){
             if(!podcastList.isEmpty()){
                 for(PodcastModel podcast:podcastList){
@@ -252,7 +254,8 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
                         searchList.add(podcast);
                     }
                 }
-                setAdapter(searchList);
+
+                setAdapter(searchList,true);
             }
         }
     }
@@ -268,8 +271,25 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
 
     }
 
-    private void setAdapter(List<PodcastModel> pL) {
-        adapter = new recyclerv(pL, this);
+    private void setAdapter(List<PodcastModel> pL, boolean isSearch) {
+        if(!isSearch){
+        adapter = new recyclerv(pL, this);}else {
+            adapter=new recyclerv(pL, new recyclerv.onItemClickListener() {
+                @Override
+                public void itemClick(int position) {
+                    if(firstCheck){
+                        Intent intent = new Intent(MarkedList.this, podcastPlayer.class);
+                        intent.putExtra("indexML",position);
+                        intent.putExtra("ML","ML");
+                        intent.putExtra("isSearch",true);
+                        listState= Objects.requireNonNull(recyclerView.getLayoutManager()).onSaveInstanceState();
+                        startActivity(intent);
+                        hasRestarted=true;
+                    }
+
+                }
+            });
+        }
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -278,6 +298,7 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
     {
         return podcastList;
     }
+    public static ArrayList<PodcastModel> getMLSearchList(){return searchList; }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -405,7 +426,7 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
 
                                                             }
 
-                                                            setAdapter(podcastList);
+                                                            setAdapter(podcastList,false);
                                                             if (listState != null) {
                                                                 Objects.requireNonNull(recyclerView.getLayoutManager()).onRestoreInstanceState(listState);
                                                             }

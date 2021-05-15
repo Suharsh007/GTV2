@@ -218,7 +218,17 @@ public class podcastPlayer extends AppCompatActivity implements Runnable {
             if(bundle.get("ML")!=null){
                 if(bundle.get("ML").equals("ML")){
                     index=bundle.getInt("indexML");
-                    list=MarkedList.getMLList();
+                    if(bundle.get("isSearch")!=null) {
+                        if (bundle.getBoolean("isSearch")){
+                            list=MarkedList.getMLSearchList();
+                        }else {
+                            list=MarkedList.getMLList();
+                        }
+
+                    }else {
+                        list=MarkedList.getMLList();
+                    }
+
                 }else {
                     index = bundle.getInt("index");
 
@@ -227,7 +237,17 @@ public class podcastPlayer extends AppCompatActivity implements Runnable {
             }else {
                 index = bundle.getInt("index");
 
-                list = podcast_Activity.getPodcastList();
+                if(bundle.get("isSearch")!=null){
+                    if(bundle.getBoolean("isSearch")){
+                        list=podcast_Activity.getSearchList();
+                    }else {
+                        list=podcast_Activity.getPodcastList();
+                    }
+                }else {
+                    list = podcast_Activity.getPodcastList();
+                }
+
+
             }
             if(index<=(list.size()-1)){
 

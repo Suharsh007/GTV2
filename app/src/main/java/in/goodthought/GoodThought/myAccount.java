@@ -89,9 +89,9 @@ public class myAccount extends AppCompatActivity {
                         Intent share = new Intent(android.content.Intent.ACTION_SEND);
                         share.setType("text/plain");
                         share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                        share.putExtra(Intent.EXTRA_SUBJECT, "Title Of The Post");
-                        share.putExtra(Intent.EXTRA_TEXT, "I am enjoying the podcasts on Good Thought." +
-                                " You should try it  "
+                        share.putExtra(Intent.EXTRA_SUBJECT, "Good Thought");
+                        share.putExtra(Intent.EXTRA_TEXT, "Good Thought is a platform through which people, may be from various field, share their journey, experiences and good learnings they had." +
+                                "\nYou may also try this platform. \nThis is the link to platform :- "
                                 +"https://play.google.com/store/apps/details?id=in.goodthought.GoodThought");
 
                         startActivity(Intent.createChooser(share, "Share link!"));

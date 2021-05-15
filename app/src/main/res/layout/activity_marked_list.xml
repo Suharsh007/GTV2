@@ -54,6 +54,7 @@
                 android:background="@drawable/round_btn"/>
         </LinearLayout>
         <EditText
+            android:focusedByDefault="false"
             android:layout_below="@+id/toolbar_ML"
             android:focusableInTouchMode="true"
             android:maxLines="1"
