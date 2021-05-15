@@ -59,6 +59,7 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
     private recyclerv adapter;
     private RecyclerView recyclerView;
     private static ArrayList<PodcastModel> podcastList = new ArrayList<>();
+    private static ArrayList<PodcastModel> searchList = new ArrayList<>();
     private ActionBarDrawerToggle toggle;
     private DrawerLayout drawerLayout;
 
@@ -244,7 +245,8 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
     }
 
     private void startSearch(String searchText) {
-        ArrayList<PodcastModel> searchList = new ArrayList<>();
+        searchList.clear();
+
         if(podcastList!=null){
             if(!podcastList.isEmpty()){
                 for(PodcastModel podcast:podcastList){
@@ -252,7 +254,8 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
                         searchList.add(podcast);
                     }
                 }
-                setAdapter(searchList);
+
+                setAdapter(searchList,true);
             }
         }
     }
@@ -268,8 +271,25 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
 
     }
 
-    private void setAdapter(List<PodcastModel> pL) {
-        adapter = new recyclerv(pL, this);
+    private void setAdapter(List<PodcastModel> pL, boolean isSearch) {
+        if(!isSearch){
+        adapter = new recyclerv(pL, this);}else {
+            adapter=new recyclerv(pL, new recyclerv.onItemClickListener() {
+                @Override
+                public void itemClick(int position) {
+                    if(firstCheck){
+                        Intent intent = new Intent(MarkedList.this, podcastPlayer.class);
+                        intent.putExtra("indexML",position);
+                        intent.putExtra("ML","ML");
+                        intent.putExtra("isSearch",true);
+                        listState= Objects.requireNonNull(recyclerView.getLayoutManager()).onSaveInstanceState();
+                        startActivity(intent);
+                        hasRestarted=true;
+                    }
+
+                }
+            });
+        }
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -278,6 +298,7 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
     {
         return podcastList;
     }
+    public static ArrayList<PodcastModel> getMLSearchList(){return searchList; }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -405,7 +426,7 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
 
                                                             }
 
-                                                            setAdapter(podcastList);
+                                                            setAdapter(podcastList,false);
                                                             if (listState != null) {
                                                                 Objects.requireNonNull(recyclerView.getLayoutManager()).onRestoreInstanceState(listState);
                                                             }
