@@ -271,6 +271,14 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(MarkedList.this,podcast_Activity.class);
+        startActivity(i);
+        this.finish();
+    }
+
     private void setAdapter(List<PodcastModel> pL, boolean isSearch) {
         if(!isSearch){
         adapter = new recyclerv(pL, this);}else {

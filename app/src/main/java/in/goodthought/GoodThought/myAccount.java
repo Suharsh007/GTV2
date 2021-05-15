@@ -135,6 +135,13 @@ public class myAccount extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(myAccount.this,podcast_Activity.class);
+        startActivity(i);
+        this.finish();
+    }
 
 
 }
