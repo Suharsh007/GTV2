@@ -10,32 +10,34 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.SearchManager;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
-import android.net.Uri;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
-import android.view.MotionEvent;
+
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.SearchView;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,6 +48,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -194,19 +197,11 @@ public class podcast_Activity extends AppCompatActivity implements recyclerv.onI
                         podcast_Activity.this.finish();
                         break;
                     case R.id.tnc:
-                      /*  Intent openURL = new Intent(android.content.Intent.ACTION_VIEW);
-                        openURL.setData(Uri.parse("https://decib.in/terms-and-conditions/"));
-                        startActivity(openURL);
-                        hasRestarted=true;*/
+
                         startActivity(new Intent(podcast_Activity.this,terms_and_conditions.class));
                         break;
                     case R.id.privacyPolicy:
-                      /*  Intent intent = new Intent();
-                        intent.setAction(Intent.ACTION_VIEW);
-                        intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                        intent.setData(Uri.parse("https://decib.in/privacy-policy/"));
-                        startActivity(intent);
-                        hasRestarted=true;*/
+
                         startActivity(new Intent(podcast_Activity.this,privacy_policy.class));
                         break;
                     case R.id.markedList:
@@ -256,6 +251,20 @@ public class podcast_Activity extends AppCompatActivity implements recyclerv.onI
                 }
             }
         });
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            return;
+                        }
+
+
+                        String token = task.getResult();
+
+                    }
+                });
 
     }
 

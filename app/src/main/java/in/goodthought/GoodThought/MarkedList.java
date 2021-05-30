@@ -11,12 +11,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.SearchManager;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
-import android.net.Uri;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -28,8 +28,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.SearchView;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,11 +36,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -49,7 +48,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -427,7 +426,7 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
                                                                         PodcastModel m = queryDocumentSnapshot.toObject(PodcastModel.class);
 
                                                                         podcastList.add(m);
-                                                                        Ids.remove(i); //check
+                                                                        Ids.remove(i);
                                                                         break;
                                                                     }
                                                                 }
