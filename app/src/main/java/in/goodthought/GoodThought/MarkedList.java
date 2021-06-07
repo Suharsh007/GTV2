@@ -51,7 +51,9 @@ import com.google.firebase.firestore.Source;
 
 
 import java.util.ArrayList;
+
 import java.util.List;
+
 import java.util.Objects;
 
 public class MarkedList extends AppCompatActivity implements recyclerv.onItemClickListener {
@@ -419,27 +421,33 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
 
 
                                                         }
-                                                        if (allPodcastSnapshots != null && allPodcastSnapshots.size() > 0) {
-                                                            for (QueryDocumentSnapshot queryDocumentSnapshot : allPodcastSnapshots) {
-                                                                for(int i =0;i<Ids.size();i++){
-                                                                    if(queryDocumentSnapshot.getId().equals(Ids.get(i))){
-                                                                        PodcastModel m = queryDocumentSnapshot.toObject(PodcastModel.class);
+                                                        PodcastModel m;
+                                                        if (allPodcastSnapshots != null) {
+                                                            if(allPodcastSnapshots.size()>0) {
+                                                                int i;
+                                                                for (QueryDocumentSnapshot queryDocumentSnapshot : allPodcastSnapshots) {
+                                                                    for ( i = 0; i < Ids.size(); i++) {
+                                                                        if (queryDocumentSnapshot.getId().equals(Ids.get(i))) {
+                                                                            m = queryDocumentSnapshot.toObject(PodcastModel.class);
 
-                                                                        podcastList.add(m);
-                                                                        Ids.remove(i);
-                                                                        break;
+                                                                            podcastList.add(m);
+                                                                            Ids.remove(i);
+                                                                            break;
+                                                                        }
                                                                     }
+
                                                                 }
 
+                                                                setAdapter(podcastList, false);
+                                                                if (listState != null) {
+                                                                    Objects.requireNonNull(recyclerView.getLayoutManager()).onRestoreInstanceState(listState);
+                                                                }
                                                             }
-
-                                                            setAdapter(podcastList,false);
-                                                            if (listState != null) {
-                                                                Objects.requireNonNull(recyclerView.getLayoutManager()).onRestoreInstanceState(listState);
-                                                            }
-
                                                         }
                                                         d.clear();
+                                                        if(Ids.size()>0){
+                                                            clearList(Ids);
+                                                        }
                                                     }
                                                 });
 
@@ -466,6 +474,42 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
                 itext.setVisibility(View.VISIBLE);
                 tryAgain.setVisibility(View.VISIBLE);}
         }
+    }
+
+    private void clearList(ArrayList<String> list) {
+
+        final boolean[] check = {false};
+
+
+        final ArrayList<QueryDocumentSnapshot> d=new ArrayList<>();
+
+
+
+            db.collection("UserDetails").whereEqualTo("personUid",user.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                    if (error==null){
+                        if (value!=null){
+                            if (!value.isEmpty()) {
+                                for (QueryDocumentSnapshot documentSnapshot:value) {
+
+                                    d.add(documentSnapshot);
+
+                                    break;
+                                }
+                                if (!check[0]){
+
+check[0]=true;
+                                    for(String ids:list){
+        db.collection("UserDetails").document(d.get(0).getId()).collection("MarkedList").document(ids).delete();
+                                    }
+    }
+                            }
+                        }
+                    }
+                }
+                });
     }
 
     @Override
