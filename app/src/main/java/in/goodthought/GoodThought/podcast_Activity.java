@@ -10,34 +10,35 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.SearchManager;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
-import android.net.Uri;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
-import android.view.MotionEvent;
+
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.SearchView;
+
+
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -46,7 +47,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
-import com.squareup.picasso.Picasso;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +73,7 @@ public class podcast_Activity extends AppCompatActivity implements recyclerv.onI
 
     private CollectionReference podcastDB = db.collection("podcast");
 
-    private ImageView podcastImage;
+
 
 
     private Parcelable listState;
@@ -153,7 +155,7 @@ public class podcast_Activity extends AppCompatActivity implements recyclerv.onI
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        podcastImage = findViewById(R.id.imageView);
+
         itext = findViewById(R.id.iu);
         tryAgain =findViewById(R.id.tryAgainButton);
 
@@ -194,19 +196,11 @@ public class podcast_Activity extends AppCompatActivity implements recyclerv.onI
                         podcast_Activity.this.finish();
                         break;
                     case R.id.tnc:
-                      /*  Intent openURL = new Intent(android.content.Intent.ACTION_VIEW);
-                        openURL.setData(Uri.parse("https://decib.in/terms-and-conditions/"));
-                        startActivity(openURL);
-                        hasRestarted=true;*/
+
                         startActivity(new Intent(podcast_Activity.this,terms_and_conditions.class));
                         break;
                     case R.id.privacyPolicy:
-                      /*  Intent intent = new Intent();
-                        intent.setAction(Intent.ACTION_VIEW);
-                        intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                        intent.setData(Uri.parse("https://decib.in/privacy-policy/"));
-                        startActivity(intent);
-                        hasRestarted=true;*/
+
                         startActivity(new Intent(podcast_Activity.this,privacy_policy.class));
                         break;
                     case R.id.markedList:
@@ -241,32 +235,33 @@ public class podcast_Activity extends AppCompatActivity implements recyclerv.onI
             }
         });
 
-        db.collection("Notice").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for(QueryDocumentSnapshot snapshot:queryDocumentSnapshots){
-                    String displayNotice = (String) snapshot.get("notice");
-                    if(displayNotice!=null){
-                        if(!displayNotice.isEmpty()){
-                            Snackbar.make(podcast_Activity.this,podcast_Activity.this.findViewById(R.id.imageView),displayNotice,10000).show();
 
-
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            return;
                         }
+
+
+                        String token = task.getResult();
+
                     }
-                }
-            }
-        });
+                });
 
     }
 
     private void startSearch(String searchText) {
         searchList.clear();
+        searchList.add(null);
         if(podcastList!=null){
             if(!podcastList.isEmpty()){
                 for(PodcastModel podcast:podcastList){
+                    if(podcast!=null){
                     if(podcast.getSpeakerName().toLowerCase().contains(searchText) || podcast.getAboutTopic().toLowerCase().contains(searchText) || podcast.getTopic().toLowerCase().contains(searchText) || podcast.getDate().toLowerCase().contains(searchText)){
                          searchList.add(podcast);
-                    }
+                    }}
                 }
 
                 setAdapter(searchList,true);
@@ -286,28 +281,45 @@ public class podcast_Activity extends AppCompatActivity implements recyclerv.onI
     }
 
     private void setAdapter(List<PodcastModel> pL, boolean isSearch) {
-        if(!isSearch){
-            adapter = new recyclerv(pL, this);
 
-        }else {
-            adapter=new recyclerv(pL, new recyclerv.onItemClickListener() {
-                @Override
-                public void itemClick(int position) {
-                    if(firstCheck){
-                        Intent intent = new Intent(podcast_Activity.this, podcastPlayer.class);
-                        intent.putExtra("index",position);
-                        intent.putExtra("isSearch",true);
-                        listState= Objects.requireNonNull(recyclerView.getLayoutManager()).onSaveInstanceState();
-                        startActivity(intent);
-                        hasRestarted=true;
-                    }
+        db.collection("podcastImage").document("Image").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+
+               String url = (String) documentSnapshot.get("imageUrl");
+
+
+                if(!isSearch){
+                    adapter = new recyclerv(pL, podcast_Activity.this,url);
+
+                }else {
+                    adapter=new recyclerv(pL, new recyclerv.onItemClickListener() {
+                        @Override
+                        public void itemClick(int position) {
+                            if(firstCheck){
+                                Intent intent = new Intent(podcast_Activity.this, podcastPlayer.class);
+                                intent.putExtra("index",position);
+                                intent.putExtra("isSearch",true);
+                                listState= Objects.requireNonNull(recyclerView.getLayoutManager()).onSaveInstanceState();
+                                startActivity(intent);
+                                hasRestarted=true;
+                            }
+
+                        }
+                    },url);
 
                 }
-            });
+                recyclerView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
 
-        }
-        recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+                if (listState != null) {
+                    Objects.requireNonNull(recyclerView.getLayoutManager()).onRestoreInstanceState(listState);
+                }
+            }
+        });
+
+
 
     }
 
@@ -328,11 +340,12 @@ public class podcast_Activity extends AppCompatActivity implements recyclerv.onI
     @Override
     public void itemClick(int position) {
         if(firstCheck){
+            if(position!=0){
             Intent intent = new Intent(podcast_Activity.this, podcastPlayer.class);
             intent.putExtra("index",position);
             listState= Objects.requireNonNull(recyclerView.getLayoutManager()).onSaveInstanceState();
             startActivity(intent);
-            hasRestarted=true;
+            hasRestarted=true;}
         }
 
 
@@ -381,32 +394,22 @@ public class podcast_Activity extends AppCompatActivity implements recyclerv.onI
         if(firstCheck) {
 
             recyclerView.setVisibility(View.VISIBLE);
-            db.collection("podcastImage").document("Image").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    String url = "";
-                    if ((url = (String) documentSnapshot.get("imageUrl")) != null) {
-                        if (!url.isEmpty())
-                            Picasso.get().load(url).fit().into(podcastImage);
-                    }
-                }
-            });
+
 
             podcastList.clear();
+            podcastList.add(null);
             podcastDB.orderBy("orderBy", Query.Direction.DESCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                     if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() > 0) {
+                        PodcastModel m;
                         for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
-                            PodcastModel m = queryDocumentSnapshot.toObject(PodcastModel.class);
+                          m= queryDocumentSnapshot.toObject(PodcastModel.class);
 
                             podcastList.add(m);
                         }
-
                         setAdapter(podcastList,false);
-                        if (listState != null) {
-                            Objects.requireNonNull(recyclerView.getLayoutManager()).onRestoreInstanceState(listState);
-                        }
+
 
                     }
                 }

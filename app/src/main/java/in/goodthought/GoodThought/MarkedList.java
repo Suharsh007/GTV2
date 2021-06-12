@@ -11,12 +11,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.SearchManager;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
-import android.net.Uri;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -28,8 +28,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.SearchView;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,11 +36,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -49,10 +48,12 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.ArrayList;
+
 import java.util.List;
+
 import java.util.Objects;
 
 public class MarkedList extends AppCompatActivity implements recyclerv.onItemClickListener {
@@ -420,27 +421,33 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
 
 
                                                         }
-                                                        if (allPodcastSnapshots != null && allPodcastSnapshots.size() > 0) {
-                                                            for (QueryDocumentSnapshot queryDocumentSnapshot : allPodcastSnapshots) {
-                                                                for(int i =0;i<Ids.size();i++){
-                                                                    if(queryDocumentSnapshot.getId().equals(Ids.get(i))){
-                                                                        PodcastModel m = queryDocumentSnapshot.toObject(PodcastModel.class);
+                                                        PodcastModel m;
+                                                        if (allPodcastSnapshots != null) {
+                                                            if(allPodcastSnapshots.size()>0) {
+                                                                int i;
+                                                                for (QueryDocumentSnapshot queryDocumentSnapshot : allPodcastSnapshots) {
+                                                                    for ( i = 0; i < Ids.size(); i++) {
+                                                                        if (queryDocumentSnapshot.getId().equals(Ids.get(i))) {
+                                                                            m = queryDocumentSnapshot.toObject(PodcastModel.class);
 
-                                                                        podcastList.add(m);
-                                                                        Ids.remove(i); //check
-                                                                        break;
+                                                                            podcastList.add(m);
+                                                                            Ids.remove(i);
+                                                                            break;
+                                                                        }
                                                                     }
+
                                                                 }
 
+                                                                setAdapter(podcastList, false);
+                                                                if (listState != null) {
+                                                                    Objects.requireNonNull(recyclerView.getLayoutManager()).onRestoreInstanceState(listState);
+                                                                }
                                                             }
-
-                                                            setAdapter(podcastList,false);
-                                                            if (listState != null) {
-                                                                Objects.requireNonNull(recyclerView.getLayoutManager()).onRestoreInstanceState(listState);
-                                                            }
-
                                                         }
                                                         d.clear();
+                                                        if(Ids.size()>0){
+                                                            clearList(Ids);
+                                                        }
                                                     }
                                                 });
 
@@ -467,6 +474,42 @@ public class MarkedList extends AppCompatActivity implements recyclerv.onItemCli
                 itext.setVisibility(View.VISIBLE);
                 tryAgain.setVisibility(View.VISIBLE);}
         }
+    }
+
+    private void clearList(ArrayList<String> list) {
+
+        final boolean[] check = {false};
+
+
+        final ArrayList<QueryDocumentSnapshot> d=new ArrayList<>();
+
+
+
+            db.collection("UserDetails").whereEqualTo("personUid",user.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                    if (error==null){
+                        if (value!=null){
+                            if (!value.isEmpty()) {
+                                for (QueryDocumentSnapshot documentSnapshot:value) {
+
+                                    d.add(documentSnapshot);
+
+                                    break;
+                                }
+                                if (!check[0]){
+
+check[0]=true;
+                                    for(String ids:list){
+        db.collection("UserDetails").document(d.get(0).getId()).collection("MarkedList").document(ids).delete();
+                                    }
+    }
+                            }
+                        }
+                    }
+                }
+                });
     }
 
     @Override
